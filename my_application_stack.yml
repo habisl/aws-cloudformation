@@ -71,7 +71,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 192.0.4.0/24
-      AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the 4th AZ in the list  
+      AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the first AZ in the list 
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-public-subnet-A

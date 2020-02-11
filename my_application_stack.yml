@@ -1,0 +1,77 @@
+################## This is draft copy of the template ############################
+
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata: 
+  License: Apache-2.0
+Description: "Create our application stack using multiple EC2 instances and RDS database. This is the
+primary structure of the application stack."
+
+############# List of parameters that needed for the resources ################
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+  VpcCIDR:
+    Description: Please enter the IP range (CIDR notation) for this VPC
+    Type: String
+    Default: 192.0.0.0/16
+
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+
+
+################ List of items that will be created in the stack ######################
+Resources:
+
+  # Creating new VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+      - Key: Name
+        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
+
+
+  ########################### Subnets and AZs configurations ###########################
+
+  privateSubnetAZ1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 192.0.1.0/24
+      AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list        
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-private-subnet-1
+  privateSubnetAZ2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 192.0.2.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the second AZ in the list  
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-private-subnet-2
+  privateSubnetAZ3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 192.0.3.0/24
+      AvailabilityZone: !Select [ 2, !GetAZs ]    # Get the 3rd AZ in the list  
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-private-subnet-3
+  publicSubnetAZ1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 192.0.4.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the 4th AZ in the list  
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-public-subnet-A

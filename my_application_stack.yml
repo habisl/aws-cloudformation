@@ -22,7 +22,7 @@ Parameters:
     ConstraintDescription: must be the name of an existing EC2 KeyPair.
 
 
-################ List of items that will be created in the stack ######################
+################ List of resouces that will be created with this template ######################
 Resources:
 
   # Creating new VPC
@@ -37,7 +37,7 @@ Resources:
         Value:  !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
 
 
-  ########################### Subnets and AZs configurations ###########################
+  ########################### Subnets and AZs configurations for Multi-AZ scanarios ###########################
 
   privateSubnetAZ1:
     Type: AWS::EC2::Subnet
